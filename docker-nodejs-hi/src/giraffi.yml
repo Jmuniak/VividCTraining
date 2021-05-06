@@ -1,0 +1,52 @@
+---
+ # Sample YAML FILE
+ # YAML supports multiple docs, and compliant parsers will recognize each set of dashes as the beginning of a new document. The separation of documents in YAML is denoted by three dashes (---). 
+ # The end of document is represented with three dots (…).
+
+ # key value pairs
+ # YAML is case sensitive
+ doe: "a deer, a female deer" # String
+ ray: 'a drop of golden sun' # can be enclosed in single or double quotes or no quotes at all.
+ # YAML recognizes unquoted numerals as integers or floating point. 
+ pi: 3.14159 # floating-point num
+ xmas: true # Bool
+ french-hens: 3 # Integer
+ calling-birds: # Array denoted by dashes in list form, 2 space indent
+   - huey
+   - dewey
+   - louie
+   - fred
+ calling-birds: ["huey", "dewey", "louie", "fred"] # Array denoted in a single line
+ xmas-fifth-day:
+   calling-birds: four
+   french-hens: 3
+   golden-rings: 5
+   partridges:
+     count: 1
+     location: "a pear tree"
+   turtle-doves: two
+    
+ # complex list, a list of objects.
+ # All of these different formats are doing the same thing. storing a list of objects
+ friends:
+   - name: "steph"
+     age: 22
+   - {name: "Adam", age: 34}
+   -
+     name: "joe"
+     age: 23
+
+  # if we want to format a long chunck of text into one line use > all other formatting is lost.
+  description: >
+   Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+   Officia facilis iure incidunt dolores. 
+   Inventore dignissimos praesentium beatae quas reiciendis 
+   mollitia quos corporis sunt, assumenda ea reprehenderit placeat! 
+   Consequuntur, quaerat fuga?
+
+  # for retaining formatting
+  signature: |
+  Jeremy Muniak
+  Software Developer
+  email - jmuniak@vividc.com
+...
