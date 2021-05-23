@@ -10,9 +10,10 @@ Parameters:
     Type: String
     Default: "latest"
 
-  S3BucketName:
-    Description: "S3BucketName"
-    Type: String
+ # S3BucketName:
+ #   Description: "S3BucketName"
+ #   Type: String
+    
 
 Resources:
   FooFunctionRole:
@@ -28,32 +29,33 @@ Resources:
                 - "lambda.amazonaws.com"
             Action:
               - "sts:AssumeRole"
-    Policies:
-      -
-        PolicyName: "FooFunctionPolicy"
-        PolicyDocument:
-          Version: '2012-10-17'
-          Statement:
-          - Effect: Allow
-            Action:
-            - logs:CreatelogGroup
-            - logs:CreateLogStream
-            - logs:PutLogEvents
-            Resource: "*"
+      Policies:
+        -
+          PolicyName: "FooFunctionPolicy"
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - logs:CreatelogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+              Resource: "*"
 
-FooFunction:
-  Type: "AWS::Lambda::Function"
-  Properties:
-    Code:
-      S3Bucket: !Ref S3BucketName
-      S3Key: !Sub FooFunction-${FooFunctionVersion.zip}
-    Description: Lambda function that schedules updates
-    Environment:
-      Variables:
-        NODE_ENV: production
-    FunctionName: FooFunction
-    Handler: "index.handler"
-    MemorySize: 128
-    Role: !GetAttr FooFunctionRole.Arn
-    Runtime: "nodejs4.3"
-    Timeout: 100
+  FooFunction:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Code:
+       # S3Bucket: !Ref S3BucketName
+         S3Bucket: bucketyboop-us-east-1
+         S3Key: funFunk.zip
+      Description: Lambda function that schedules updates
+      Environment:
+        Variables:
+          NODE_ENV: production
+      FunctionName: FooFunction
+      Handler: "index.handler"
+      MemorySize: 128
+      Role: !GetAtt FooFunctionRole.Arn
+      Runtime: "nodejs12.x"
+      Timeout: 100
