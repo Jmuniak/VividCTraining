@@ -1,0 +1,11 @@
+# COMPLETED
+1. created a LAMBDA function that lists S3 Buckets
+2. ziped up the folder of code, package-lock,json, and node_modules
+3. uploaded to AWS Lambda
+4. Set IAM permissions for the function to have full access to S3 buckets.
+5. tested the lambda and it was successful.
+6. set iam permissions to just readonly on S3 and tested again. still successful. 
+7. under lambda > config > monitoring > enabled xray tracing.
+	1. This caused the dashboard to add the permissions to the lambda as it didn't have it alreay.
+8. run the test
+9. view the traces in xray
