@@ -19,6 +19,7 @@ exports.handler = function (event, context, callback) {
                 body: JSON.stringify(data)
             };
             console.log("response: " + JSON.stringify(response));
+            callback(null, response);
         };
     });
 };
