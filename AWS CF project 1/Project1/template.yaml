@@ -24,7 +24,7 @@ Resources:
       Role: !GetAtt MyS3Role.Arn
       Code:
         S3Bucket: bucketyboop-us-east-1
-        S3Key: bucketyboop-us-east-1/index.zip
+        S3Key: index.zip
       Handler: index.handler
       Runtime: nodejs14.x
       TracingConfig:
