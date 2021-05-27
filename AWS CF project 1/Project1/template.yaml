@@ -3,7 +3,7 @@ Description: Project 1 with CloudFormation, VividCloud Training.
 
 Resources:
 
-  Role:
+  MyS3Role:
     Type: AWS::IAM::Role
     Properties:
       ManagedPolicyArns:
@@ -21,9 +21,12 @@ Resources:
   function:
     Type: AWS::Lambda::Function
     Properties:
+      Role: !GetAtt MyS3Role.Arn
       Code:
         S3Bucket: bucketyboop-us-east-1
         S3Key: bucketyboop-us-east-1/index.zip
+      Handler: index.handler
+      Runtime: nodejs14.x
       TracingConfig:
         Mode: Active
 ## Deploying this

@@ -17,5 +17,15 @@
 
 # Potential IDEA: 
 # add Xray outside of the logic. 
-# List the security groups associated with S3 buckets instead?
+# List the bucket policies associated with S3 buckets instead?
 
+
+
+# play with kineses streams, que other actions like run another lambda or push to S3
+# S3 events. Conceptually ( manually uplaod a file, trigger an event that runs a lambda and lists the objects in the S3 bucket or change the file name something simple ) 
+# Dynamo Streams is another que service.
+# dig into versioning more, not critical now but a good learning layer to add later. Blue green deployment testing. Running functions similtaneiously. 
+# Event bridge cron jobs
+# revisit stages 
+# SNS triggered lambda that sends an email.
+# CF Parameters have been replaced by Ansible variables.
