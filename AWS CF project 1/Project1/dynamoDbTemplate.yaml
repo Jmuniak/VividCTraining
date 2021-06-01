@@ -8,7 +8,7 @@ Resources:
       AttributeDefinitions:
         - AttributeName: "Persons Name"
           AttributeType: "S"
-        - AttriuteName: "Location"
+        - AttributeName: "Location"
           AttributeType: "S"
       KeySchema:
         - AttributeName: "Persons Name"
@@ -33,7 +33,7 @@ Resources:
         Statement:
           - Effect: "Allow"
             Action: "dynamodb:Query"
-            Resource: !GetAtt Letterkenny.Arn # uses "*" in demo. Recommended using the ARN of the table we are creating.
+            Resource: "*" # uses "*" in demo but he Recommended using the ARN of the table we are creating. "!GetAtt Letterkenny.Arn" doesn't work because its a Circular Dependency between resources: [DynamoDBQueryPolicy, Letterkenny]
       Roles:
         - Ref: "TownFolkQueryRole"
 
