@@ -24,9 +24,18 @@ Resources:
       Role: !GetAtt MyS3Role.Arn
       Code:
         S3Bucket: bucketyboop-us-east-1
-        S3Key: index.zip
+        S3Key: s3index.zip
       Handler: index.handler
       Runtime: nodejs14.x
       TracingConfig:
         Mode: Active
+
 ## Deploying this
+
+## TODO
+## Add Xray permissions.
+## Work with DynamoDb
+## Log data from one table to another
+## API Gateway? more lambdas. 
+## Add VPC, Networking
+## EC2 Instance to host a site?
