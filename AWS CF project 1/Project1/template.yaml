@@ -33,9 +33,12 @@ Resources:
 ## Deploying this
 
 ## TODO
-## Add Xray permissions.
-## Work with DynamoDb
-## Log data from one table to another
+## Add Xray permissions. And a Log Group
+##    Log groups need to exsist before the lambda function can use them DependsOn: LogGroupA
+## Work with DynamoDb tables
+##    Log data from one table to another
 ## API Gateway? more lambdas. 
 ## Add VPC, Networking
 ## EC2 Instance to host a site?
+
+ 

@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+ ## DynamoDB Table
+  Letterkenny:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: TownFolkTable
+      AttributeDefinitions:
+        - AttributeName: "Persons Name"
+          AttributeType: "S"
+        - AttriuteName: "Location"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "Persons Name"
+          KeyType: "HASH"
+        - AttributeName: "Location"
+          KeyType: "RANGE"
+      TimeToLiveSpecification:
+        AttributeName: "ExpirationTime"
+        Enabled: true
+      ProvisionedThroughput: # Scaling factors on your table.
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+    DependsOn:
+      - DynamoDBQueryPolicy
+
+  DynamoDBQueryPolicy:
+    Type: AWS::IAM::Policy # Quotes in demo
+    Properties:
+      PolicyName: DynamoDBQueryPolicy # This can be a different name and the DependsOn still works. 
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action: "dynamodb:Query"
+            Resource: !GetAtt Letterkenny.Arn # uses "*" in demo. Recommended using the ARN of the table we are creating.
+      Roles:
+        - Ref: "TownFolkQueryRole"
+
+  TownFolkQueryRole:
+    Type: AWS::IAM::Role # Quotes in demo
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - "dynamodb.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Path: "/"
