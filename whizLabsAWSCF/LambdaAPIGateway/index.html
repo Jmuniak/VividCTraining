@@ -1,0 +1,26 @@
+<!-- Jquery script -->
+
+<script>
+    $(document).ready(function () {
+        let jsonData = {};
+        // pName is Partition Key Name in the DynamoDB Table.
+        jsonData['pName'] = "Wayne";
+        $.ajax({
+            type: "POST",
+            // url of the api, production stage, along with the resource
+            url: "https://cn80jfuoc7.execute-api.us-east-2.amazonaws.com/ProductionStage/sampleResource",
+            // COORS
+            crossDomain: true,
+            // the data to pass on to the api
+            data: JSON.stringify(jsonData),
+            contentType: "application/json",
+            dataType: "json",
+            // once the post is Successful, console log the item from the table
+            success: function (data, status) {
+                console.log(JSON.stringify(data.Item.Name));
+                console.log(JSON.stringify(data.Item.Location));
+                // other attributes from the item on the table.
+            }
+        });
+    });
+</script>

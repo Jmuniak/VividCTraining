@@ -4,6 +4,7 @@ const whizlabs3 = new whizlabsAWS.S3();
 
 exports.handler = function (event, context, callback) {
   return whizlabs3.listBuckets().promise();
+  // ListObjectsV2 to list the objects in a bucket
 };
 
 // console.log('Loading function');
