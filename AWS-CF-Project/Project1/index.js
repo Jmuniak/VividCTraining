@@ -3,6 +3,12 @@ const whizlabsAWS = whizlabsXRay.captureAWS(require('aws-sdk'));
 const whizlabs3 = new whizlabsAWS.S3();
 
 exports.handler = function (event, context, callback) {
+  // <New>
+  console.log("event: ", event);
+  console.log("context", context);
+  console.log("callback", callback);
+  // </New>
+
   return whizlabs3.listBuckets().promise();
   // ListObjectsV2 to list the objects in a bucket
 };

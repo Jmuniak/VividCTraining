@@ -1,16 +1,17 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Name:CFs3LS-Lambda = This is a personal Cloudformation project created 6/2/21 durring the initial learning phase of training with VividCloud.
+Description: Name:CFs3LS-Lambda = Projectv3. This is a personal Cloudformation project created 6/2/21 durring the initial learning phase of training with VividCloud.
 
 Resources:
   # IAM ROLE FOR LAMBDA EXE
-  # TODO - add dynamo DB permissions (required)
   LambdaExecutionRole:
-  
     Type: AWS::IAM::Role
+      # TODO - add dynamo DB permissions for lambda (required)
     Properties:
       ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
         - "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
         - "arn:aws:iam::aws:policy/AWSXrayFullAccess"
+        - "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -39,11 +40,16 @@ Resources:
       Code:
         ## TODO JS Lambda Code to write and read to dynamo table
         S3Bucket: bucketyboop-us-east-1
-        S3Key: s3index.zip
+        S3Key: s3andClogs.zip
       Handler: index.handler
       Runtime: nodejs14.x
       TracingConfig:
         Mode: Active
+
+
+
+
+
 
   # DynamoDB table resource
   JediDDBTable:
@@ -126,3 +132,22 @@ Resources:
         ScaleOutCooldown: 60
         PredefinedMetricSpecification:
           PredefinedMetricType: DynamoDBWriteCapacityUtilization
+
+
+
+  # # SNS resource
+  # LambdaSNSTopic:
+  #   Type: 'AWS::SNS::Topic'
+  # LambSNSSubscription:
+  #   Type: AWS::SNS::Subscription
+  #   Properties: 
+  #     TopicArn: !Ref LambdaSNSTopic
+  #     DeliveryPolicy: Json
+  #     Endpoint: String
+  #     FilterPolicy: Json
+  #     Protocol: String
+  #     RawMessageDelivery: Boolean
+  #     RedrivePolicy: Json
+  #     Region: String
+  #     SubscriptionRoleArn: String
+

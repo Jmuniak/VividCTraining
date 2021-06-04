@@ -2,7 +2,7 @@
 1. security group needed before the instance can be created
 2. EC2 instance / web server created after the security group is in place.
     2.a. You can use DependsOn to make a application server wait to be created until the database has also been created. 
-    
+
 
 
 
@@ -35,4 +35,6 @@
 # Event bridge cron jobs
 # play with kineses streams, que other actions like run another lambda or push to S3
 # dig into versioning more, not critical now but a good learning layer to add later. Blue green deployment testing. Running functions similtaneiously. 
+
+
 # SNS triggered lambda that sends an email.
