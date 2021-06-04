@@ -1,0 +1,58 @@
+##################
+## DynamoDB Table
+  StarWars:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: JediSith
+      AttributeDefinitions:
+        - AttributeName: "Name"
+          AttributeType: "S"
+        - AttributeName: "Allegiance"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "Name"
+          KeyType: "HASH"
+        - AttributeName: "Allegiance"
+          KeyType: "RANGE"
+      TimeToLiveSpecification:
+        AttributeName: "ExpirationTime"
+        Enabled: true
+      ProvisionedThroughput: # Scaling factors on your table.
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+    DependsOn:
+      - DynamoDBQueryPolicy
+
+  DynamoDBQueryPolicy:
+    Type: AWS::IAM::Policy # Quotes in demo
+    Properties:
+      PolicyName: JediDBQueryPolicy # This can be a different name and the DependsOn still works. 
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action: "dynamodb:Query"
+            Resource: "*" # uses "*" in demo but he Recommended using the ARN of the table we are creating. "!GetAtt Letterkenny.Arn" doesn't work because its a Circular Dependency between resources: [DynamoDBQueryPolicy, Letterkenny]
+      Roles:
+        - Ref: "JediQueryRole"
+
+  TownFolkQueryRole:
+    Type: AWS::IAM::Role # Quotes in demo
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - "dynamodb.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Path: "/"
+
+## Xray TODO!
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-tracingconfig.html#aws-properties-lambda-function-tracingconfig--examples
+#      TracingConfig:
+#        Mode: Active
+
+## Lambda Code TODO!

@@ -8,7 +8,8 @@ Resources:
     Properties:
       ManagedPolicyArns:
         - "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
-        - "arn:aws:iam::aws:policy/AWSXrayFullAccess"  # new Line, worked fine
+        - "arn:aws:iam::aws:policy/AWSXrayFullAccess"
+        - "arn:aws:logs:*:*:log-group:/aws/lambda-insights:*"
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:

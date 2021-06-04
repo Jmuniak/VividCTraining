@@ -1,48 +1,93 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: > 
-This is a personal Cloudformation 
-project created 6/2/21 durring the initial learning 
-phase of training with VividCloud.
+Description: Name:CFs3LS-Lambda = This is a personal Cloudformation project created 6/2/21 durring the initial learning phase of training with VividCloud.
+
 Resources:
-## DynamoDB Table
-  StarWars:
+  # IAM ROLE FOR LAMBDA EXE
+  # TODO - add dynamo DB permissions (required)
+  LambdaExecutionRole:
+  
+    Type: AWS::IAM::Role
+    Properties:
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+        - "arn:aws:iam::aws:policy/AWSXrayFullAccess"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: "/"
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:*
+                Resource: arn:aws:logs:*:*:*
+
+  # Lambda Function to list buckets
+  function:
+    Type: AWS::Lambda::Function
+    Properties:
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ## TODO JS Lambda Code to write and read to dynamo table
+        S3Bucket: bucketyboop-us-east-1
+        S3Key: s3index.zip
+      Handler: index.handler
+      Runtime: nodejs14.x
+      TracingConfig:
+        Mode: Active
+
+  # DynamoDB table resource
+  JediDDBTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: JediSith
       AttributeDefinitions:
         - AttributeName: "Name"
           AttributeType: "S"
         - AttributeName: "Allegiance"
+          AttributeType: "S"
+        - AttributeName: "Force Level"
           AttributeType: "S"
       KeySchema:
         - AttributeName: "Name"
           KeyType: "HASH"
         - AttributeName: "Allegiance"
           KeyType: "RANGE"
-      TimeToLiveSpecification:
-        AttributeName: "ExpirationTime"
-        Enabled: true
-      ProvisionedThroughput: # Scaling factors on your table.
-        ReadCapacityUnits: "5"
-        WriteCapacityUnits: "5"
-    DependsOn:
-      - DynamoDBQueryPolicy
-
-  DynamoDBQueryPolicy:
-    Type: AWS::IAM::Policy # Quotes in demo
+      GlobalSecondaryIndexes:
+        - IndexName: "GSI"
+          KeySchema:
+            - AttributeName: "Force Level"
+              KeyType: "HASH"
+          Projection:
+            ProjectionType: "KEYS_ONLY"
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+  WriteCapacityScalableTarget:
+    Type: AWS::ApplicationAutoScaling::ScalableTarget
     Properties:
-      PolicyName: JediDBQueryPolicy # This can be a different name and the DependsOn still works. 
-      PolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: "Allow"
-            Action: "dynamodb:Query"
-            Resource: "*" # uses "*" in demo but he Recommended using the ARN of the table we are creating. "!GetAtt Letterkenny.Arn" doesn't work because its a Circular Dependency between resources: [DynamoDBQueryPolicy, Letterkenny]
-      Roles:
-        - Ref: "JediQueryRole"
-
-  TownFolkQueryRole:
-    Type: AWS::IAM::Role # Quotes in demo
+      MaxCapacity: 15
+      MinCapacity: 5
+      ResourceId: !Join
+        - /
+        - - table
+          - !Ref JediDDBTable
+      RoleARN: !GetAtt ScalingRole.Arn
+      ScalableDimension: dynamodb:table:WriteCapacityUnits
+      ServiceNamespace: dynamodb
+  ScalingRole:
+    Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
@@ -50,14 +95,34 @@ Resources:
           - Effect: "Allow"
             Principal:
               Service:
-                - "dynamodb.amazonaws.com"
+                - application-autoscaling.amazonaws.com
             Action:
               - "sts:AssumeRole"
       Path: "/"
-
-## Xray TODO!
-# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-tracingconfig.html#aws-properties-lambda-function-tracingconfig--examples
-#      TracingConfig:
-#        Mode: Active
-
-## Lambda Code TODO!
+      Policies:
+        - PolicyName: "root"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "dynamodb:DescribeTable"
+                  - "dynamodb:UpdateTable"
+                  - "cloudwatch:PutMetricAlarm"
+                  - "cloudwatch:DescribeAlarms"
+                  - "cloudwatch:GetMetricStatistics"
+                  - "cloudwatch:SetAlarmState"
+                  - "cloudwatch:DeleteAlarms"
+                Resource: "*"
+  WriteScalingPolicy:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: WriteAutoScalingPolicy
+      PolicyType: TargetTrackingScaling
+      ScalingTargetId: !Ref WriteCapacityScalableTarget
+      TargetTrackingScalingPolicyConfiguration:
+        TargetValue: 50.0
+        ScaleInCooldown: 60
+        ScaleOutCooldown: 60
+        PredefinedMetricSpecification:
+          PredefinedMetricType: DynamoDBWriteCapacityUtilization
