@@ -1,11 +1,12 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Name:CFs3LS-Lambda = Projectv3. This is a personal Cloudformation project created 6/2/21 durring the initial learning phase of training with VividCloud.
+      # TODO - add Event Bridge trigger code and permissions
 
 Resources:
-  # IAM ROLE FOR LAMBDA EXE
+
+  # IAM ROLE RESOURCE FOR LAMBDA EXE
   LambdaExecutionRole:
     Type: AWS::IAM::Role
-      # TODO - add dynamo DB permissions for lambda (required)
     Properties:
       ManagedPolicyArns:
         - "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
@@ -32,24 +33,20 @@ Resources:
                   - logs:*
                 Resource: arn:aws:logs:*:*:*
 
-  # Lambda Function to list buckets
+  # LAMBDA FUNCTION RESOURCE
+  # CURRENTLY lists s3 buckets
+  # TODO add code to the function for dynamo
   function:
     Type: AWS::Lambda::Function
     Properties:
       Role: !GetAtt LambdaExecutionRole.Arn
       Code:
-        ## TODO JS Lambda Code to write and read to dynamo table
         S3Bucket: bucketyboop-us-east-1
         S3Key: s3andClogs.zip
       Handler: index.handler
       Runtime: nodejs14.x
       TracingConfig:
         Mode: Active
-
-
-
-
-
 
   # DynamoDB table resource
   JediDDBTable:

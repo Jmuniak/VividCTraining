@@ -1,0 +1,16 @@
+AppendItemToListFunction:
+  Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: MyLambdaRole
+      Code:
+        # Using Substitution, instead of storing code in an S3, 
+          # to run "inline javascript" for the lambda function
+        ZipFile: !Sub |
+          let response = require('cfn-response');
+          exports.handler = function(event, context) {
+            let responseData = {Value: event.ResourceProperties.List};
+            responseData.Value.push(event.ResourceProperties.AppenedItem);
+            response.send(event, context, response.SUCCESS, responseData);
+          };
+      Runtime: nodejs14.x
