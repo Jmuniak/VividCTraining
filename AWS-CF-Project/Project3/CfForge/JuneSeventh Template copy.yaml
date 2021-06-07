@@ -39,14 +39,6 @@ Resources:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
 
-  # OUTPUTS
-Outputs:
-  TableName:
-    Value:
-      !Ref: JediDDBTable
-    "Description": "Table name of the newly created DynamoDB table"
-
-
 
   ##### OLD PROJECT TEMPLATE ######
   # IAM ROLE RESOURCE FOR LAMBDA EXE
@@ -136,7 +128,7 @@ Outputs:
       ScalableDimension: dynamodb:table:WriteCapacityUnits
       ServiceNamespace: dynamodb
 
-  DBRole:
+  ScalingRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -145,7 +137,7 @@ Outputs:
           - Effect: "Allow"
             Principal:
               Service:
-                - dynamo.amazonaws.com
+                - application-autoscaling.amazonaws.com
             Action:
               - "sts:AssumeRole"
       Path: "/"
