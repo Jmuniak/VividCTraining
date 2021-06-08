@@ -1,4 +1,21 @@
 AWSTemplateFormatVersion: 2010-09-09
+Description: Stack=(Lambda, DynamoTable, RestApi, ApiGateway, ApiMethod, ApiGateway-Deployment, ApiGatewayPermission, IAMRole for lambda)
+
+Parameters:
+  LambdaFuncName:
+    Type: String
+    Default: Lambda_api-lambda-db
+  DynamoDBTableName:
+    Type: String
+    Default: Dynamo_api-lambda-db
+  APIName:
+    Type: String
+    Default: API_api-lambda-db
+  EnvironmentName:
+    Type: String
+    Default: Prod
+
+
 Resources:
   LambdaFunction:
     Type: "AWS::Lambda::Function"
@@ -9,7 +26,7 @@ Resources:
           var AWS = require('aws-sdk');
           var dynamo = new AWS.DynamoDB.DocumentClient();
           exports.handler = function(event, context, callback) {
-          //console.log('Received event:', JSON.stringify(event, null, 2));
+          console.log('Received event:', JSON.stringify(event, null, 2));
           var operation = event.operation;
           if (event.tableName) {
             event.payload.TableName = event.tableName;
@@ -41,9 +58,11 @@ Resources:
       Role: !GetAtt IAMRole.Arn
     DependsOn:
       - DynamoDBTable
+      # Why? IAM ROLE is Created First. DynamoDBTable Second. Lambda Third
 
 
   DynamoDBTable:
+  # TODO?? Add more of a table description here?
     Type: "AWS::DynamoDB::Table"
     Properties:
       TableName:
@@ -57,10 +76,11 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: "5"
         WriteCapacityUnits: "5"
-    DependsOn:
+    DependsOn: 
       - IAMRole
+      # Why? IAM ROLE is Created First. DynamoDBTable Second.
 
-
+  # Why is this so few lines?
   APIGatewayRestAPI:
     Type: 'AWS::ApiGateway::RestApi'
     Properties:
@@ -68,6 +88,8 @@ Resources:
         Ref: APIName
     DependsOn:
       - LambdaFunction
+      # Why? IAM ROLE is Created First. DynamoDBTable Second. Lambda Third. 
+      # APIGatewayRestAPI Fourth.
 
 
   APIGatewayResource:
@@ -81,6 +103,8 @@ Resources:
         Ref: LambdaFuncName
     DependsOn:
       - APIGatewayRestAPI
+      # Why? IAM ROLE is Created First. DynamoDBTable Second. Lambda Third. 
+      # APIGatewayRestAPI Fourth. APIGatewayResource Fith.
 
 
   APIGatewayMethod:
@@ -103,6 +127,9 @@ Resources:
           - LambdaFuncNameArn: !GetAtt LambdaFunction.Arn
     DependsOn:
       - APIGatewayResource
+      # Why? IAM ROLE is Created First. DynamoDBTable Second. Lambda Third. 
+      # APIGatewayRestAPI Fourth. APIGatewayResource Fith. 
+      # APIGatewayMethod Sixth.
 
 
   APIGatewayDeployment:
@@ -113,6 +140,9 @@ Resources:
         Ref: EnvironmentName
     DependsOn:
       - APIGatewayMethod
+      # Why? IAM ROLE is Created First. DynamoDBTable Second. Lambda Third. 
+      # APIGatewayRestAPI Fourth. APIGatewayResource Fith. 
+      # APIGatewayMethod Sixth. APIGatewayDeployment Seventh.
 
 
   APIGatewayPermission:
@@ -123,6 +153,10 @@ Resources:
       Principal: apigateway.amazonaws.com
     DependsOn:
       - APIGatewayDeployment
+      # Why? IAM ROLE is Created First. DynamoDBTable Second. Lambda Third. 
+      # APIGatewayRestAPI Fourth. APIGatewayResource Fith. 
+      # APIGatewayMethod Sixth. APIGatewayDeployment Seventh.
+      # APIGatewayPermission Eighth.
 
 
   IAMRole:
@@ -164,16 +198,3 @@ Resources:
                 Resource: '*'
 
 
-Parameters:
-  LambdaFuncName:
-    Type: String
-    Default: Lambda_api-lambda-db
-  DynamoDBTableName:
-    Type: String
-    Default: Dynamo_api-lambda-db
-  APIName:
-    Type: String
-    Default: API_api-lambda-db
-  EnvironmentName:
-    Type: String
-    Default: Prod

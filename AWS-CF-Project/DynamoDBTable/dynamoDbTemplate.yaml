@@ -27,7 +27,7 @@ Resources:
   DynamoDBQueryPolicy:
     Type: AWS::IAM::Policy # Quotes in demo
     Properties:
-      PolicyName: DynamoDBQueryPolicy # This can be a different name and the DependsOn still works. 
+      PolicyName: DynamoDBQueryPolicy # This can be a different name than the 'logical resource name' and the DependsOn still works. 
       PolicyDocument:
         Version: "2012-10-17"
         Statement:

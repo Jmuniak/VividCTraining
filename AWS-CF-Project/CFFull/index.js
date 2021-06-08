@@ -1,6 +1,6 @@
 console.log('Loading DynamoDB Lambda function');
-var AWS = require('aws-sdk');
-var dynamo = new AWS.DynamoDB.DocumentClient();
+const AWS = require('aws-sdk');
+const dynamo = new AWS.DynamoDB.DocumentClient();
 exports.handler = function (event, context, callback) {
     //console.log('Received event:', JSON.stringify(event, null, 2));
     var operation = event.operation;

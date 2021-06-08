@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+  Name:CFs3LS-Lambda = Projectv3. This is a personal Cloudformation project created End of May / Early June 2021
+  Durring the initial learning phase of training with VividCloud.
+  This is a simple Customer information Capture Stack.
+  It uses an API, a Role, a Dynamo table, and a Lambda.
+# TODO - add Kineses stream trigger/code/permissions
+
+Resources:
+  ##### NEW PROJECT TEMPLATE ######
+
+  # DynamoDB table resource
+  JediDDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: "Name"
+          AttributeType: "S"
+        - AttributeName: "Allegiance"
+          AttributeType: "S"
+        - AttributeName: "Force Level"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "Name"
+          KeyType: "HASH"
+        - AttributeName: "Allegiance"
+          KeyType: "RANGE"
+      GlobalSecondaryIndexes:
+        - IndexName: "GSI"
+          KeySchema:
+            - AttributeName: "Force Level"
+              KeyType: "HASH"
+          Projection:
+            ProjectionType: "KEYS_ONLY"
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  # dynamodb role
+  DDBRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - dynamodb.amazonaws.com
+            Action:
+              - "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        - PolicyName: "root"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "dynamodb:DescribeTable"
+                  - "dynamodb:UpdateTable"
+                  - "cloudwatch:PutMetricAlarm"
+                  - "cloudwatch:DescribeAlarms"
+                  - "cloudwatch:GetMetricStatistics"
+                  - "cloudwatch:SetAlarmState"
+                  - "cloudwatch:DeleteAlarms"
+                Resource: "*"
+
+### OUTPUTS
+Outputs:
+  TableArn:
+    Value: !GetAtt JediDDBTable.Arn
+    "Description": "Table name of the newly created DynamoDB table"
+  RoleCreate:
+    Description: Role generated for the dynamo table and cloudwatch
+    Value: !GetAtt DDBRole.Arn

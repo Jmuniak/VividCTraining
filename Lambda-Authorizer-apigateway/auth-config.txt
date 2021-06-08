@@ -1,0 +1,2 @@
+https://www.whizlabs.com/learn/course/aws-lambda-api-gateway/video/2463
+5:30 timestamp
