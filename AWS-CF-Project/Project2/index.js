@@ -2,8 +2,10 @@ console.log('Loading DynamoDB Lambda function');
 const AWS = require('aws-sdk');
 const dynamo = new AWS.DynamoDB.DocumentClient();
 exports.handler = function (event, context, callback) {
-    //console.log('Received event:', JSON.stringify(event, null, 2));
-    var operation = event.operation;
+    // log the event
+    console.log('Received event:', JSON.stringify(event, null, 2));
+
+    let operation = event.operation;
     if (event.tableName) {
         event.payload.TableName = event.tableName;
     }

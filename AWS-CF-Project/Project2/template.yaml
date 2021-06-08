@@ -13,7 +13,7 @@ Parameters:
     Default: API_api-lambda-db
   EnvironmentName:
     Type: String
-    Default: Prod
+    Default: Demo
 
 
 Resources:
@@ -23,11 +23,12 @@ Resources:
       Code:
         ZipFile: |
           console.log('Loading DynamoDB Lambda function');
-          var AWS = require('aws-sdk');
-          var dynamo = new AWS.DynamoDB.DocumentClient();
+          const AWS = require('aws-sdk');
+          const whizlabsXRay = require('aws-xray-sdk-core');
+          let dynamo = new AWS.DynamoDB.DocumentClient();
           exports.handler = function(event, context, callback) {
           console.log('Received event:', JSON.stringify(event, null, 2));
-          var operation = event.operation;
+          let operation = event.operation;
           if (event.tableName) {
             event.payload.TableName = event.tableName;
           }
@@ -58,7 +59,7 @@ Resources:
       Role: !GetAtt IAMRole.Arn
     DependsOn:
       - DynamoDBTable
-      # Why? IAM ROLE is Created First. DynamoDBTable Second. Lambda Third
+      # Why? IAM ROLE is Created First. DynamoDBTable Second. Lambda Third.
 
 
   DynamoDBTable:
@@ -80,7 +81,7 @@ Resources:
       - IAMRole
       # Why? IAM ROLE is Created First. DynamoDBTable Second.
 
-  # Why is this so few lines?
+  # APIGatewayRestAPI 
   APIGatewayRestAPI:
     Type: 'AWS::ApiGateway::RestApi'
     Properties:
@@ -158,7 +159,7 @@ Resources:
       # APIGatewayMethod Sixth. APIGatewayDeployment Seventh.
       # APIGatewayPermission Eighth.
 
-
+  # Created First
   IAMRole:
     Type: 'AWS::IAM::Role'
     Properties:
@@ -195,6 +196,10 @@ Resources:
                   - 'logs:CreateLogStream'
                   - 'logs:CreateLogGroup'
                   - 'logs:PutLogEvents'
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - 'xray:*'
                 Resource: '*'
 
 
