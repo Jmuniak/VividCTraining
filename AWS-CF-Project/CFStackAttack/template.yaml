@@ -24,7 +24,7 @@ Resources:
         ZipFile: |
           console.log('Loading DynamoDB Lambda function');
           const AWS = require('aws-sdk');
-          const whizlabsXRay = require('aws-xray-sdk-core');
+          # const whizlabsXRay = require('aws-xray-sdk-core');
           let dynamo = new AWS.DynamoDB.DocumentClient();
           exports.handler = function(event, context, callback) {
           console.log('Received event:', JSON.stringify(event, null, 2));
@@ -113,7 +113,7 @@ Resources:
     Properties:
       RestApiId: !Ref APIGatewayRestAPI
       ResourceId: !Ref APIGatewayResource
-      HttpMethod: POST
+      HttpMethod: GET # Was Post but you need get to hit a lambda. Added an event trigger is also required.
       AuthorizationType: NONE
       MethodResponses:
         - StatusCode: 200
@@ -121,7 +121,7 @@ Resources:
         Type: AWS
         IntegrationResponses:
           - StatusCode: 200
-        IntegrationHttpMethod: POST
+        IntegrationHttpMethod: GET # Was Post
         Uri: !Sub
           - >-
             arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFuncNameArn}/invocations
@@ -197,9 +197,9 @@ Resources:
                   - 'logs:CreateLogGroup'
                   - 'logs:PutLogEvents'
                 Resource: '*'
-              - Effect: Allow
-                Action:
-                  - 'xray:*'
-                Resource: '*'
+              # - Effect: Allow
+              #   Action:
+              #     - 'xray:*'
+              #   Resource: '*'
 
 
