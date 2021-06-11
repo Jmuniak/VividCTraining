@@ -1,0 +1,26 @@
+--- ##### Bootstrap Webservers #####
+- hosts: webservers ### Group of hosts
+  become: yes  ### sudo become user, by default, 'root' (equiv to -b in ad-hoc commands) this essentially puts sudo before everything we run in this playbook because these things will need elevated privilages
+  
+  tasks:
+  - name: ### task name prints as executed
+    yum:  ### module name: "yum" performing the task and "template" module below
+	    name: httpd  ### name for yum is the package name. httpd is just a base starting page served by a webserver.
+		  state: latest  ### wether or not its installed, or other such states a package may have
+  - name: install httpd
+    yum:
+	    name: httpd
+		  state: latest
+  - name: create index.html file
+    file:
+	    name: /var/www/html/index.html
+		  state: touch
+  - name: add web content
+    lineinfile:   ### add lines to files
+	    line: "here is some text"   ### the line to add
+		  path: /var/www/html/index.html  ### the filepath to the file we want to manipulate with 'lineinfile'
+  - name: start httpd
+    service:   ### 'service' module to interact with services
+	    name: httpd  ### name of the service
+		  state: started  ### make sure the httpd service has started.
+### so when we execute this playbook: its going to run against all servers in the webservers group as defined by ansible, its going to execute all the tasks using sudo which will be: 1. install httpd, 2. create index.html file, 3. put some text in that file, 4. and finally start the httpd service
