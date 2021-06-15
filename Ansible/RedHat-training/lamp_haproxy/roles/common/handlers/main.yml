@@ -1,2 +1,5 @@
 ---
 # handlers file for common
+- name: restart ntp # must match the notify from common/tasks/ntp.yml
+  service: name=ntpd state=restarted
+  

@@ -1,2 +1,18 @@
 ---
 # tasks file for apache
+- name: install apache
+  yum: name=httpd state=present
+
+- name: create sites directory
+  file: path="{{item}}" state=directory # maybe no quotes needed, but why
+  with_items: "{{apache_dirs}}"
+
+- name: copy an index.html
+  template: src=index.html.j2 dest="{{apache_docroot}}"/index.html # maybe no quotes needed, but why
+
+- name: copy  httpd conf "apache config"
+  template: src=httpd.conf-{{ansible_os_family}}.j2 dest={{apache_config}} # this allows for mixed inventory. eg. Rel and debian machines
+  notify: restart apache
+  
+- name: start apache
+  service: name=httpd state=started enabled=yes

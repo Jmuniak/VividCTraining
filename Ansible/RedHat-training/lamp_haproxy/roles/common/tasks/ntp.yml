@@ -1,0 +1,11 @@
+---
+- name: install ntp
+  yum: name=ntp state=present
+
+- name: configure ntp file
+  template: src=ntp.conf.js dest=/etc/ntp.conf
+  # since we pushed out a config file we probably want to restart services. Notify below.
+  notify: restart ntp
+
+- name: start ntp
+  service: name=ntpd state=started
