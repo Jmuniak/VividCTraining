@@ -1,0 +1,30 @@
+---
+# tasks file for web
+- name: install git
+  yum: name=git state=present
+
+- name: checkout lameapp from repo
+  git: repo=https://github.com/jsmartin/lameapp.git version="{{ lameapp_version|string }}" # cast to a string inside, to prevent errors
+
+- name: set permissions on the app
+  file: name=/var/www/lameapp/lame.py mode=0755
+
+- name: add apache config file
+  copy: src=lameapp.conf dest="{{site_avaialable}}" # maybe no quote
+  notify: restart apache
+
+- name: link app config
+  file: src="{{sites_available}}/lameapp.conf" dest="{{sites_enabled}}" state=link # maybe no quote on dest
+  # state=link is going to link those 2 directories together
+
+- meta: flush_handlers
+# flush handlers option allows us to run the handler now to restart apache. 
+# Like right now instead of at the end of the play. 
+# Kick off the restart early.
+
+- name: check for proper response from UI
+  uri:
+    url: http://localhost/lame
+    return_content: yes
+  register: result # register the output of return_content, calling the variable 'result'
+  until: '"Hello Moon" in result.content' # looping logic, basically run until Hello Moon is in the outpoot.
