@@ -1,0 +1,37 @@
+---
+# play 1
+- name: Apply the common configuration to all hosts
+  hosts: all
+  remote_user: vagrant
+  become: yes
+
+  roles:
+  - common
+
+# play 2 
+- name: Apply the db configuration
+  hosts: dbservers
+  remote_user: vagrant
+  become: yes
+
+  roles:
+  - mariadb
+
+# play 3
+- name: Apply the apache and the web roles
+  hosts: webservers
+  remote_user: vagrant
+  become: yes
+
+  roles:
+  - apache
+  - web
+
+# final play
+- name: Apply the load balance config
+  hosts: lbservers
+  remote_user: vagrant
+  become: yes
+
+  roles:
+  - haproxy
