@@ -1,0 +1,46 @@
+---
+-
+  name: Play 1
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+    - name: execute script = shutdownScript.sh
+      script: shutdownScript.sh
+      register: result
+#### SUDO ####
+# Play 1
+# cd /mnt/c/Users/JeremyMuniak/Desktop/CodeVaultV1
+# git add .
+# git commit -m "Thank you Ansible Shutdown Playbook"
+##### git push, password needs to be provided ####
+# Play 2
+# cd /mnt/c/Users/JeremyMuniak/tutorials/
+# git add .
+# etc...
+# Play 3?
+# cd /mnt/c/Users/JeremyMuniak/Code/jeremy-christian-project
+# git add .
+# etc...
+#######
+    # - name: list ls
+    #   command: ls
+    #   register: result
+
+    - name: Print return information from the previous task
+      ansible.builtin.debug:
+        var: result
+        verbosity: 1
+
+# - name: Get uptime information
+#   ansible.builtin.shell: /usr/bin/uptime
+#   register: result
+
+# - name: Print return information from the previous task
+#   ansible.builtin.debug:
+#     var: result
+#     verbosity: 2
+
+  # - name: log output
+  #   lineinfile:   ### add lines to files
+  #     line: "here is some text"   ### the line to add
+  #     path: ./assets/testFile.txt  ### the filepath to the file we want to manipulate with 'lineinfile'
