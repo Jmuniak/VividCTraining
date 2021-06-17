@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
+bash
 date
 cd /mnt/c/Users/JeremyMuniak/Desktop/CodeVaultV1 || exit
 ls
+git add .
+git commit -m "Thank you Ansible Shudown Playbook"
+git push
 # Play 1
 # cd /mnt/c/Users/JeremyMuniak/Desktop/CodeVaultV1
 # git add .
@@ -15,4 +19,3 @@ ls
 # cd /mnt/c/Users/JeremyMuniak/Code/jeremy-christian-project
 # git add .
 # etc...
-

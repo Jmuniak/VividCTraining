@@ -6,7 +6,9 @@
   
   tasks:
   - name: install epel repo
-    yum: name=epel-release state=present
+    yum: 
+      name: epel-release
+      state: present
 
   - name: install python bindings for SELinux
     yum: name={{item}} state=present
@@ -20,4 +22,6 @@
     changed_when: false
 
   - name: install apache
-    yum: name=httpd state=present
+    yum:
+      name: httpd
+      state: present

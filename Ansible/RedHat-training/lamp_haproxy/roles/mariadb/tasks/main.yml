@@ -5,7 +5,7 @@
   with_items:
   - mariadb-server
   - MySQL-python
-   firewalld
+  - firewalld
 
 - name: configure selinux to start mysql on any port
   seboolean:
