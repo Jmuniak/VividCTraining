@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 date
-cd /mnt/c/Users/JeremyMuniak/Desktop/CodeVaultV1
+cd /mnt/c/Users/JeremyMuniak/Desktop/CodeVaultV1 || exit
 ls
 # Play 1
 # cd /mnt/c/Users/JeremyMuniak/Desktop/CodeVaultV1
