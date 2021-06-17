@@ -1,23 +1,43 @@
 ---
 
 - hosts: 127.0.0.1
-  become: yes
   tasks:
-  - name: PWD
-    command: sudo pwd
-
-  - name: date
-    command: sudo date
-
-  - name: exe test_script.sh
-    script: ./test_script
-
   - name: create testFile.txt file
     file:
-      name: /assets/testFile.txt
+      name: ./assets/testFile.txt
       state: touch
+  - name: PWD
+    # command: pwd
+    command: pwd >> ./assets/testFile.txt
+    # register: cmd_result
 
-  - name: log output
-    lineinfile:   ### add lines to files
-      line: "here is some text"   ### the line to add
-      path: /assets/testFile.txt  ### the filepath to the file we want to manipulate with 'lineinfile'
+  - name: date
+    command: date
+    # register: cmd_result
+
+  - name: list ls
+    command: ls
+    register: result
+
+  - name: Print return information from the previous task
+    ansible.builtin.debug:
+      var: result
+      verbosity: 1
+
+# - name: Get uptime information
+#   ansible.builtin.shell: /usr/bin/uptime
+#   register: result
+
+# - name: Print return information from the previous task
+#   ansible.builtin.debug:
+#     var: result
+#     verbosity: 2
+
+
+  # - name: exe test_script.sh
+  #   script: test_script
+
+  # - name: log output
+  #   lineinfile:   ### add lines to files
+  #     line: "here is some text"   ### the line to add
+  #     path: ./assets/testFile.txt  ### the filepath to the file we want to manipulate with 'lineinfile'
