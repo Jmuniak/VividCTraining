@@ -19,3 +19,7 @@ git push
 # cd /mnt/c/Users/JeremyMuniak/Code/jeremy-christian-project
 # git add .
 # etc...
+
+# alias
+# AshutDown='cd /mnt/c/Users/JeremyMuniak/tutorials/Ansible/shutdownV1'
+# OshutDown='AshutDown && ansible-playbook main.yml -v'

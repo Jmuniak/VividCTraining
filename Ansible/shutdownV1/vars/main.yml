@@ -1,0 +1,8 @@
+# variables here are applicable to shutdown process
+# common: THIS WAS THE PROBLEM?
+---
+downscript: "vars/shutdownScript.sh"
+  # some_bucket: "buckety-boop"
+  # ansible_python_interpreter: /usr/bin/python3
+  # region: "us-east-1"
+  # project_dir: ""

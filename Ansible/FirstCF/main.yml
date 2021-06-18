@@ -1,0 +1,14 @@
+---
+-
+  name: Play 1
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+
+    # - include:
+
+
+
+    - name: execute script = testDeploy1.sh
+      script: testDeploy1.sh
+      register: result

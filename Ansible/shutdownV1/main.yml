@@ -4,9 +4,22 @@
   hosts: 127.0.0.1
   connection: local
   tasks:
+
+    - name: 'bring in the vars'
+      include_vars:
+        file: "vars/main.yml"
+
+
     - name: execute script = shutdownScript.sh
-      script: shutdownScript.sh
+      script: "{{downscript}}"
       register: result
+
+    - name: Print return information from the previous task
+      ansible.builtin.debug:
+        var: result
+        verbosity: 1
+
+
 #### SUDO ####
 # Play 1
 # cd /mnt/c/Users/JeremyMuniak/Desktop/CodeVaultV1
@@ -26,11 +39,7 @@
     #   command: ls
     #   register: result
 
-    - name: Print return information from the previous task
-      ansible.builtin.debug:
-        var: result
-        verbosity: 1
-
+### OLD ##
 # - name: Get uptime information
 #   ansible.builtin.shell: /usr/bin/uptime
 #   register: result
