@@ -14,7 +14,8 @@ git add .
 git commit -m "Thank you Ansible Shudown Playbook"
 git push
 
-
-# alias
+# todo
+# break up alias into the separate shut down Dirs and git pushes, maybe with roles? or separate playbooks and then an alias that runs them both?
 # AshutDown='cd /mnt/c/Users/JeremyMuniak/tutorials/Ansible/shutdownV1'
-# OshutDown='AshutDown && ansible-playbook main.yml -v'
+# OshutDown='cd /mnt/c/Users/JeremyMuniak/Desktop/CodeVaultV1'
+# FullshutDown='AshutDown && 0shutDown && ansible-playbook main.yml -v'
