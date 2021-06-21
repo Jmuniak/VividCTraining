@@ -1,0 +1,6 @@
+---
+# variables here are applicable to all host groups
+
+template_url: https://cf-templates-b1xw4f0m3hhk-us-east-1.s3.amazonaws.com/2021159XS0-template.yaml
+aws_profile: JEMAWS
+

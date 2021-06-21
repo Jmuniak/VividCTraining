@@ -1,0 +1,5 @@
+### add vars here
+
+# role
+deployment:
+  cftemp_url: .env.template_url

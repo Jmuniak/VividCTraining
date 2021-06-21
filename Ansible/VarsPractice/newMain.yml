@@ -1,0 +1,21 @@
+---
+-
+  name: Play 1
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+
+  - name: 'bring in the vars'
+    include_vars:
+      file: "vars/main.yml"
+
+
+  - name: execute test_script = script1.sh
+    script: "{{test_script}}"
+    # command: ls {{home}}
+    register: result
+
+  - name: Print return information from the previous task
+    ansible.builtin.debug:
+      var: result
+      verbosity: 0

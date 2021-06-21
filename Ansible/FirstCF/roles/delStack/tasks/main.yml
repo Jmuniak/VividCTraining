@@ -1,0 +1,6 @@
+
+# delete a stack example from ansible docs.
+-  name: delete a stack
+    amazon.aws.cloudformation:
+      stack_name: Ansible-Built-Stack
+      state: "absent"
