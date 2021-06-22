@@ -129,7 +129,10 @@ Resources:
         Uri: !Sub
           - >-
             'arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:624164837375:function:Lambda_api-lambda-db/invocations'
-          - LambdaFuncNameArn: Fn::GetAtt:  [ LambdaFunction, Arn ]
+          - LambdaFuncNameArn:
+            Fn::GetAtt:
+            - LambdaFunction
+            - Arn
     DependsOn:
       - APIGatewayResource
       # Why? IAM ROLE is Created First. DynamoDBTable Second. Lambda Third. 
