@@ -1,6 +1,14 @@
+---
+-
+  name: Play 1
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
 
-# delete a stack example from ansible docs.
--  name: delete a stack
+  # delete a stack example from ansible docs.
+  - name: delete a stack
     amazon.aws.cloudformation:
-      stack_name: Ansible-Built-Stack
+      profile: JEMAWS
+      region: us-east-1
+      stack_name: ansible-cfStack
       state: "absent"

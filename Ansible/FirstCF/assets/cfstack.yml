@@ -56,7 +56,10 @@ Resources:
         Ref: LambdaFuncName
       Handler: index.handler
       Runtime: nodejs12.x
-      Role: !GetAtt IAMRole.Arn
+      Role: 
+        - Fn::GetAtt: 
+          - AMRole
+          - Arn
     DependsOn:
       - DynamoDBTable
       # Why? IAM ROLE is Created First. DynamoDBTable Second. Lambda Third.
@@ -97,9 +100,10 @@ Resources:
     Type: 'AWS::ApiGateway::Resource'
     Properties:
       RestApiId: !Ref APIGatewayRestAPI
-      ParentId: !GetAtt
-        - APIGatewayRestAPI
-        - RootResourceId
+      ParentId: 
+        - Fn::GetAtt: 
+          - APIGatewayRestAPI
+          - RootResourceId
       PathPart:
         Ref: LambdaFuncName
     DependsOn:
@@ -124,8 +128,8 @@ Resources:
         IntegrationHttpMethod: GET # Was Post
         Uri: !Sub
           - >-
-            arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFuncNameArn}/invocations
-          - LambdaFuncNameArn: !GetAtt LambdaFunction.Arn
+            'arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:624164837375:function:Lambda_api-lambda-db/invocations'
+          - LambdaFuncNameArn: Fn::GetAtt:  [ LambdaFunction, Arn ]
     DependsOn:
       - APIGatewayResource
       # Why? IAM ROLE is Created First. DynamoDBTable Second. Lambda Third. 
@@ -150,7 +154,10 @@ Resources:
     Type: 'AWS::Lambda::Permission'
     Properties:
       Action: 'lambda:InvokeFunction'
-      FunctionName: !GetAtt LambdaFunction.Arn
+      FunctionName: 
+        - Fn::GetAtt:
+          - LambdaFunction
+          - Arn
       Principal: apigateway.amazonaws.com
     DependsOn:
       - APIGatewayDeployment

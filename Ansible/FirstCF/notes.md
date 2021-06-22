@@ -4,7 +4,7 @@
 ***NEXT***   ***NEXT***   ***NEXT***
 # need use the mazon.aws.cloudformation module. with boto, python, aws sso permissions ***Needs work***
 # provide a 'templated src cloudformation.yml' and a 'dest cloudformation.yml' so that ansible can fill in any blanks to protect sensitive information and then we execute 
-# CLI CF Deploy script. `aws cloudformation deploy --template /mnt/c/Users/JeremyMuniak/tutorials/AWS-CF-Project/CFStackAttack/template.yaml --stack-name my-new-stackCLI --capabilities CAPABILITY_NAMED_IAM`
+# CLI CF Deploy script. `aws cloudformation deploy --template /mnt/c/Users/JeremyMuniak/tutorials/AWS-CF-Project/CFStackAttack/template.yaml --stack-name my-new-stackCLI --capabilities CAPABILITY_NAMED_IAM --region=us-east-1`
 
 
 

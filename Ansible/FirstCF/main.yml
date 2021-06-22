@@ -5,10 +5,46 @@
   connection: local
   tasks:
 
-    # - include:
+  # Variables
+    # - name: Vars File
+    #   include_vars:
+    #     file: "vars/main.yml"
 
+    # requirements for AWS module
+    - name: Pip3 install boto, botocore, and boto3
+      pip:
+        name:
+          - boto
+          - boto3 
+          - botocore
 
+    - name: Build CF stack from template
+      amazon.aws.cloudformation:
+        stack_name: "ansible-cfStack"
+        # profile: "JEMAWS"
+        state: "present"
+        region: "us-east-1"
+        # disable_rollback: false    this and on_create_failure are mutually exclusive.
+        on_create_failure: DELETE
+        template: "assets/cfstack.yml"
+        # template_url: s3://cf-templates-b1xw4f0m3hhk-us-east-1/2021159yyu-template.yaml
+        # from docs|| role_arn: 'arn:aws:iam::123456789012:role/cloudformation-iam-role'
+        tags:
+          Stack: "ansible-cfStack"
+          Owner: "Jm"
 
-    - name: execute script = testDeploy1.sh
-      script: testDeploy1.sh
-      register: result
+    - name: Get summary information about a stack
+      amazon.aws.cloudformation_info:
+        # profile: JEMAWS
+        stack_name: ansible-cfStack
+        region: us-east-1
+        all_facts: yes
+        stack_resources: true
+        stack_policy: true
+        stack_events: true
+      failed_when: cloudformation['ansible-cfStack'] is undefined
+      register: output
+
+    - name: debug service
+      debug:
+        msg: "{{ output['cloudformation']['ansible-cfStack'] }}"
