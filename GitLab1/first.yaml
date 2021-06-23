@@ -1,0 +1,33 @@
+# Root gitlab pipeline file
+
+stages:
+  - build
+
+Create Runner Images:
+  stage: build
+  image:  docker:19.03.1
+  services:
+    -  docker:19.03.1-dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - echo "before_script"
+    - apk update
+    - apk add --no-cache docker bash openssl-dev libffi-dev build-base python3-dev py3-pip py3-cryptography jq git
+    - apk add --no-cache ansible py3-setuptools
+    - pip3 install awscli botocore boto3 docker docker-compose
+    - pip3 install --upgrade ansible==2.9.3
+    - docker info
+  script:
+    - echo "Create build-runner images"
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - ansible-playbook playbook.yml --tags "build"
+  after_script:
+    - echo "after_script"
+  tags:
+    - aws
+    - docker
+    - vivid
+
+  when: always
